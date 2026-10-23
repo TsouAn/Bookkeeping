@@ -19,7 +19,7 @@ export default function MonthlySummary({ summary }) {
         </div>
         <div className="stat">
           <span className="stat-label">結餘</span>
-          <span className={`stat-value ${balance < 0 ? 'expense' : ''}`}>{formatMoney(balance)}</span>
+          <span className={`stat-value ${balance > 0 ? 'up' : balance < 0 ? 'down' : ''}`}>{formatMoney(balance)}</span>
         </div>
       </div>
 

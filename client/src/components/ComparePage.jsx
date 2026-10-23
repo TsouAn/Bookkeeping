@@ -84,10 +84,25 @@ export default function ComparePage() {
       {error && <p className="banner-error">{error}</p>}
 
       {result && (
-        <>
+        // 總額與分類放在同一張卡片，圖例只出現一次
+        <section className="card compare-result">
+          <div className="chart-header">
+            <h2 className="card-title">比較結果</h2>
+            <ul className="legend" aria-label="圖例">
+              <li>
+                <span className="swatch series-a" aria-hidden="true" />
+                期間一
+              </li>
+              <li>
+                <span className="swatch series-b" aria-hidden="true" />
+                期間二
+              </li>
+            </ul>
+          </div>
           <CompareTable result={result} />
+          <h3 className="section-title">分類支出</h3>
           <CategoryCompareChart byCategory={result.byCategory} />
-        </>
+        </section>
       )}
     </main>
   );

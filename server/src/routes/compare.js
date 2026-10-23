@@ -69,8 +69,9 @@ export function compareRouter(db, { now = () => new Date() } = {}) {
       diff: {
         income: { amount: totalsB.income - totalsA.income, percent: percentChange(totalsA.income, totalsB.income) },
         expense: { amount: totalsB.expense - totalsA.expense, percent: percentChange(totalsA.expense, totalsB.expense) },
-        balance: { amount: totalsB.balance - totalsA.balance },
       },
+      // 結餘不算變化量，而是兩期加起來淨剩多少（見 design.md 決策 3）
+      combinedBalance: totalsA.balance + totalsB.balance,
       byCategory,
     });
   });

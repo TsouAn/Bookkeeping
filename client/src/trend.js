@@ -1,11 +1,15 @@
 import { formatMoney } from './format.js';
 
-// 差額的箭頭與好壞：支出增加是壞事，收入、結餘增加是好事（見 design.md 決策 6）
-export function trend(kind, amount) {
+// 差額只看方向：增加紅（up）、減少綠（down），台灣股市慣例（見 design.md 決策 6）
+export function trend(amount) {
   if (amount === 0) return { arrow: '', tone: 'neutral' };
-  const up = amount > 0;
-  const good = kind === 'expense' ? !up : up;
-  return { arrow: up ? '↑' : '↓', tone: good ? 'good' : 'bad' };
+  return amount > 0 ? { arrow: '↑', tone: 'up' } : { arrow: '↓', tone: 'down' };
+}
+
+// 合計金額不是變化量，不加箭頭，只依正負上色：正紅、負綠（見 design.md 決策 6）
+export function signTone(amount) {
+  if (amount === 0) return 'neutral';
+  return amount > 0 ? 'up' : 'down';
 }
 
 // 14.3 → '+14.3%'、-25 → '-25%'、null → '—'

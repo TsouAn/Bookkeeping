@@ -26,9 +26,9 @@
   "b": { "start": "2026-10-12", "end": "2026-10-18", "income": 0, "expense": 3200, "balance": -3200 },
   "diff": {
     "income":  { "amount": 0,    "percent": null },
-    "expense": { "amount": 400,  "percent": 14.3 },
-    "balance": { "amount": -400 }
+    "expense": { "amount": 400,  "percent": 14.3 }
   },
+  "combinedBalance": -6000,
   "byCategory": [{ "category": "餐飲", "a": 1200, "b": 1500, "diff": 300 }]
 }
 ```
@@ -47,6 +47,8 @@
 - `percent = round(diff / a * 100, 1)`，`a === 0` 時為 `null`
 - 用 `Math.round(x * 10) / 10`；負數的 .x5 進位方向與正數略有差異，對記帳用途可接受
 - 結餘可能為負或 0，百分比沒有意義，所以不提供
+- 結餘不算變化量，改回傳 `combinedBalance` = 期間一結餘 + 期間二結餘。使用者想知道「兩段期間加起來淨剩多少」（例：-420 與 1,000 → 580），而不是結餘本身漲了多少（1,420）
+  - 替代方案（原本的做法）：結餘也用期間二減期間一。數學上一致，但實際使用時 1,420 這個數字讓人誤以為算錯
 
 ### 4. 分類比較在 SQL 分別取兩期小計，在 JS 合併
 - 兩次 `GROUP BY category` 查詢後用 `Map` 合併，缺的補 0，依 `max(a, b)` 由大到小排序
@@ -68,10 +70,13 @@ client/src/
 - 月份不使用 `<input type="month">`：Safari 桌面版不支援，只用 ‹ › 步進
 - 期間一、期間二的顏色使用兩個固定 CSS 變數（淺色／深色模式各一組），圖例與長條共用
 
-### 6. ↑↓ 顏色規則放在前端一個純函式
-- `trend(kind, amount)` → `{ arrow: '↑' | '↓' | '', tone: 'good' | 'bad' | 'neutral' }`
-- 支出增加 = bad（紅）、收入增加 = good（綠）、結餘增加 = good；差額 0 為 neutral 且不顯示箭頭
+### 6. ↑↓ 顏色規則：只看方向，紅漲綠跌
+- `trend(amount)` → `{ arrow: '↑' | '↓' | '', tone: 'up' | 'down' | 'neutral' }`
+- 增加 = up（紅）、減少 = down（綠），收入／支出／分類都一樣；差額 0 為 neutral 且不顯示箭頭
+- 結餘合計不是變化量，不加箭頭，只依正負上色：正數 up（紅）、負數 down（綠）、0 neutral
+- CSS 以語意變數 `--up`、`--down` 表示漲跌，與表示錯誤／刪除的 `--danger` 分開，避免改漲跌顏色時連帶影響錯誤提示
 - 以 Vitest 測試這個函式，覆蓋 spec 中的顏色 scenario
+- 替代方案（原本的做法）：依好壞上色（支出增加紅、收入增加綠）。實際使用時收入增加與支出減少都是綠色，整張表一片綠，看不出漲跌，因此改用使用者熟悉的台灣股市慣例
 
 ## Risks / Trade-offs
 

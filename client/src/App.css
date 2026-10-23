@@ -5,10 +5,13 @@
   --muted: #6b7280;
   --border: #e5e7eb;
   --accent: #2563eb;
-  --income: #15803d;
-  --income-soft: #dcfce7;
-  --expense: #dc2626;
-  --expense-soft: #fee2e2;
+  /* 漲跌：紅漲綠跌（台灣股市慣例）。錯誤與刪除另用 --danger，兩者分開調整 */
+  --up: #dc2626;
+  --up-soft: #fee2e2;
+  --down: #15803d;
+  --down-soft: #dcfce7;
+  --danger: #dc2626;
+  --danger-soft: #fee2e2;
   --bar: #93c5fd;
   /* 比較圖的兩個期間（已用 dataviz 驗證工具檢查色盲可分辨） */
   --series-a: #2a78d6;
@@ -29,10 +32,12 @@
     --muted: #9aa0a9;
     --border: #2c3039;
     --accent: #60a5fa;
-    --income: #4ade80;
-    --income-soft: #14532d;
-    --expense: #f87171;
-    --expense-soft: #7f1d1d;
+    --up: #f87171;
+    --up-soft: #7f1d1d;
+    --down: #4ade80;
+    --down-soft: #14532d;
+    --danger: #f87171;
+    --danger-soft: #7f1d1d;
     --bar: #3b82f6;
     --series-a: #3987e5;
     --series-b: #d95926;
@@ -126,8 +131,8 @@ select {
 }
 
 .banner-error {
-  background: var(--expense-soft);
-  color: var(--expense);
+  background: var(--danger-soft);
+  color: var(--danger);
   padding: 12px 16px;
   border-radius: var(--radius);
 }
@@ -158,12 +163,14 @@ select {
   overflow-wrap: anywhere;
 }
 
-.income {
-  color: var(--income);
+.income,
+.up {
+  color: var(--up);
 }
 
-.expense {
-  color: var(--expense);
+.expense,
+.down {
+  color: var(--down);
 }
 
 .category-bars {
@@ -230,13 +237,13 @@ select {
 }
 
 .toggle.active.expense {
-  background: var(--expense-soft);
-  color: var(--expense);
+  background: var(--down-soft);
+  color: var(--down);
 }
 
 .toggle.active.income {
-  background: var(--income-soft);
-  color: var(--income);
+  background: var(--up-soft);
+  color: var(--up);
 }
 
 .field {
@@ -264,7 +271,7 @@ select {
 
 .form-error {
   margin: 0;
-  color: var(--expense);
+  color: var(--danger);
   font-size: 0.9rem;
 }
 
@@ -346,8 +353,8 @@ select {
 }
 
 .delete-button:hover {
-  background: var(--expense-soft);
-  color: var(--expense);
+  background: var(--danger-soft);
+  color: var(--danger);
 }
 
 .confirm-delete {
@@ -359,7 +366,7 @@ select {
 
 .confirm-text {
   font-size: 0.85rem;
-  color: var(--expense);
+  color: var(--danger);
   white-space: nowrap;
 }
 
@@ -374,7 +381,7 @@ select {
 
 .confirm-yes {
   border: none;
-  background: var(--expense);
+  background: var(--danger);
   color: #fff;
 }
 
@@ -413,11 +420,16 @@ select {
 /* ---------- 比較：控制區 ---------- */
 .compare-controls {
   display: grid;
-  gap: 16px;
+  gap: 10px;
+  padding: 12px;
 }
 
 .unit-toggle {
   grid-template-columns: repeat(3, 1fr);
+}
+
+.unit-toggle .toggle {
+  padding: 6px;
 }
 
 .toggle.active.unit {
@@ -426,60 +438,86 @@ select {
   box-shadow: 0 1px 2px rgb(0 0 0 / 0.15);
 }
 
+/* 一列：色塊名稱 ‹ 期間文字 › 📅 */
 .period-picker {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto 28px 1fr 28px 28px;
   align-items: center;
-  gap: 8px 12px;
+  gap: 4px;
 }
 
 .period-label {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 0.85rem;
+  gap: 4px;
+  margin-right: 4px;
+  font-size: 0.8rem;
   color: var(--muted);
   white-space: nowrap;
 }
 
-.period-stepper {
-  display: grid;
-  grid-template-columns: 36px 1fr 36px;
-  align-items: center;
-  gap: 4px;
-  min-width: 0;
+.step-button {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--card);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.step-button:disabled {
+  opacity: 0.35;
+  cursor: default;
 }
 
 .period-text {
   text-align: center;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
 
-.icon-button:disabled {
-  opacity: 0.35;
-  cursor: default;
+.calendar-slot {
+  position: relative;
+  width: 28px;
+  height: 28px;
 }
 
-.period-date {
-  grid-column: 2;
-  justify-self: center;
-  padding: 6px 10px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--card);
-  font-size: 0.85rem;
+.calendar-slot .step-button {
+  font-size: 0.8rem;
+}
+
+/* 原生日期輸入框藏在 📅 按鈕後面，只用來跳出日曆 */
+.visually-hidden-date {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  border: 0;
+  padding: 0;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .swatch {
   display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 3px;
-  margin-right: 4px;
-  vertical-align: baseline;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  margin-right: 2px;
 }
 
 .series-a {
@@ -490,17 +528,53 @@ select {
   background: var(--series-b);
 }
 
-/* ---------- 比較：總額表格 ---------- */
+/* ---------- 比較：結果卡片 ---------- */
+.compare-result {
+  padding: 12px;
+}
+
+.chart-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.chart-header .card-title {
+  margin: 0;
+}
+
+.legend {
+  display: flex;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.section-title {
+  margin: 12px 0 6px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
 .compare-table {
   width: 100%;
   border-collapse: collapse;
   font-variant-numeric: tabular-nums;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .compare-table th,
 .compare-table td {
-  padding: 8px 4px;
+  padding: 5px 4px;
   text-align: right;
   border-bottom: 1px solid var(--border);
 }
@@ -512,7 +586,7 @@ select {
 
 .compare-table thead th {
   font-weight: 500;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--muted);
   white-space: nowrap;
 }
@@ -528,75 +602,85 @@ select {
 }
 
 .diff .percent {
-  display: block;
-  font-size: 0.8rem;
+  display: inline-block;
+  /* 固定寬度，結餘列沒有百分比時也佔同樣空間，三列差額才會對齊 */
+  min-width: 5.5em;
+  margin-left: 4px;
+  text-align: left;
+  font-size: 0.75rem;
   font-weight: 500;
 }
 
-.diff.good {
-  color: var(--income);
+.combined-label {
+  margin-right: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--muted);
 }
 
-.diff.bad {
-  color: var(--expense);
+.diff.up {
+  color: var(--up);
+}
+
+.diff.down {
+  color: var(--down);
 }
 
 .diff.neutral {
   color: var(--muted);
 }
 
-/* ---------- 比較：分類長條圖 ---------- */
-.chart-header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.legend {
-  display: flex;
-  gap: 12px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-size: 0.85rem;
-  color: var(--muted);
-}
-
+/* 每個分類兩列：左欄名稱／差額，右欄兩條長條 */
 .compare-chart {
   list-style: none;
-  margin: 8px 0 0;
+  margin: 0;
   padding: 0;
   display: grid;
-  gap: 14px;
+  gap: 8px;
 }
 
-.compare-row-head {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 4px;
-  font-size: 0.9rem;
+.compare-row {
+  display: grid;
+  grid-template-columns: 4.5em 1fr;
+  row-gap: 2px;
+  column-gap: 8px;
+  align-items: center;
+  font-size: 0.8rem;
 }
 
 .compare-category {
+  grid-column: 1;
+  grid-row: 1;
   font-weight: 600;
 }
 
+.compare-diff {
+  grid-column: 1;
+  grid-row: 2;
+  font-size: 0.75rem;
+}
+
 .bar-row {
+  grid-column: 2;
   display: grid;
-  grid-template-columns: 1fr 5em;
+  grid-template-columns: 1fr 4.5em;
   align-items: center;
-  gap: 8px;
-  margin-top: 2px;
-  font-size: 0.85rem;
+  gap: 6px;
 }
 
 .compare-track {
-  background: transparent;
+  display: block;
+  height: 8px;
 }
 
 .compare-track .bar-fill {
+  display: block;
+  height: 100%;
   /* 長條從左側基準線出發，只有數值端是圓角 */
   border-radius: 0 4px 4px 0;
+}
+
+.bar-row .bar-value {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }

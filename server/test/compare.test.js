@@ -116,7 +116,21 @@ describe('Requirement: 總額比較', () => {
     assert.deepEqual(res.body.diff.income, { amount: 5000, percent: null });
   });
 
-  test('Scenario: 結餘只有差額', async () => {
+  test('Scenario: 結餘顯示兩期合計', async () => {
+    const { app } = setup({ now: NOW });
+    await add(
+      app,
+      expense({ amount: 420, date: '2026-10-18' }),
+      income({ amount: 1000, date: '2026-10-19' }),
+    );
+    const res = await compare(app, 'day', '2026-10-18', '2026-10-19');
+    assert.equal(res.body.a.balance, -420);
+    assert.equal(res.body.b.balance, 1000);
+    assert.equal(res.body.combinedBalance, 580);
+    assert.equal(res.body.diff.balance, undefined); // 結餘沒有差額與百分比
+  });
+
+  test('Scenario: 兩期合計結餘為負', async () => {
     const { app } = setup({ now: NOW });
     await add(
       app,
@@ -124,9 +138,7 @@ describe('Requirement: 總額比較', () => {
       income({ amount: 300, date: '2026-10-19' }),
     );
     const res = await compare(app, 'day', '2026-10-18', '2026-10-19');
-    assert.equal(res.body.a.balance, -500);
-    assert.equal(res.body.b.balance, 300);
-    assert.deepEqual(res.body.diff.balance, { amount: 800 });
+    assert.equal(res.body.combinedBalance, -200);
   });
 
   test('Scenario: 兩個期間都沒有記錄', async () => {
@@ -138,8 +150,8 @@ describe('Requirement: 總額比較', () => {
     assert.deepEqual(res.body.diff, {
       income: { amount: 0, percent: null },
       expense: { amount: 0, percent: null },
-      balance: { amount: 0 },
     });
+    assert.equal(res.body.combinedBalance, 0);
     assert.deepEqual(res.body.byCategory, []);
   });
 
