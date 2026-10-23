@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { formatSigned } from '../format.js';
 
-export default function TransactionList({ transactions, onDelete }) {
+export default function TransactionList({ transactions, onDelete, highlightId }) {
   // 正在確認刪除的那一筆。不用 window.confirm，因為部分瀏覽器（如 App 內嵌瀏覽器）會封鎖對話框
   const [confirmingId, setConfirmingId] = useState(null);
 
@@ -13,7 +13,7 @@ export default function TransactionList({ transactions, onDelete }) {
       ) : (
         <ul className="transaction-list">
           {transactions.map((t) => (
-            <li key={t.id} className="transaction">
+            <li key={t.id} className={`transaction ${t.id === highlightId ? 'is-new' : ''}`}>
               <span className="t-date">{t.date.slice(5).replace('-', '/')}</span>
               <span className="t-main">
                 <span className="t-category">{t.category}</span>
