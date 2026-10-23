@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api } from './api.js';
 import { taipeiMonth } from './time.js';
+import CalendarPage from './components/CalendarPage.jsx';
 import ComparePage from './components/ComparePage.jsx';
 import MonthPicker from './components/MonthPicker.jsx';
 import MonthlySummary from './components/MonthlySummary.jsx';
@@ -8,8 +9,10 @@ import Tabs from './components/Tabs.jsx';
 import TransactionForm from './components/TransactionForm.jsx';
 import TransactionList from './components/TransactionList.jsx';
 
+// 頁籤種類與順序見 openspec/specs/app-navigation
 const TABS = [
   ['ledger', '記帳'],
+  ['calendar', '日曆'],
   ['compare', '比較'],
 ];
 
@@ -72,6 +75,8 @@ export default function App() {
             <TransactionList transactions={transactions} onDelete={handleDelete} />
           </main>
         </>
+      ) : tab === 'calendar' ? (
+        <CalendarPage />
       ) : (
         <ComparePage />
       )}

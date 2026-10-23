@@ -1,0 +1,154 @@
+/* 日曆頁樣式。獨立於 App.css，日曆的變更不會動到共用樣式（見 add-calendar-view design.md 決策 7） */
+
+.calendar-card {
+  padding: 12px;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.calendar-weekdays,
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.calendar-weekdays {
+  margin-bottom: 4px;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.calendar-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  min-width: 0;
+  min-height: 52px;
+  padding: 4px 2px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--bg);
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.calendar-cell:hover {
+  border-color: var(--border);
+}
+
+.empty-cell {
+  background: transparent;
+  cursor: default;
+}
+
+.cell-day {
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.cell-amount {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.65rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 今天：外框 */
+.calendar-cell.is-today {
+  border-color: var(--accent);
+}
+
+/* 選取：填色 */
+.calendar-cell.is-selected {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.calendar-cell.is-selected .cell-amount {
+  color: #fff;
+}
+
+/* ---------- 當日明細 ---------- */
+.day-totals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.day-totals strong {
+  margin-left: 4px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.day-totals strong.income,
+.day-totals strong.up {
+  color: var(--up);
+}
+
+.day-totals strong.expense,
+.day-totals strong.down {
+  color: var(--down);
+}
+
+.day-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.day-items li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.day-items li:last-child {
+  border-bottom: none;
+}
+
+.day-item-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* 手機：格子約 40px 寬，縮小間距與字級，讓「+1,000」「−12.3萬」完整顯示不被截斷 */
+@media (max-width: 420px) {
+  .calendar-card {
+    padding: 10px 8px;
+  }
+
+  .calendar-weekdays,
+  .calendar-grid {
+    gap: 3px;
+  }
+
+  .calendar-cell {
+    padding: 4px 0;
+  }
+
+  .cell-amount {
+    font-size: 0.6rem;
+    letter-spacing: -0.02em;
+  }
+}
