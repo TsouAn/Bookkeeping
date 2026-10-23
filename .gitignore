@@ -3,3 +3,6 @@ server/data/
 dist/
 .env
 .DS_Store
+
+# 個人使用的圖片（有版權，不上傳到公開 repo）
+client/public/images/

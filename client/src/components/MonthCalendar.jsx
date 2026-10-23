@@ -1,14 +1,37 @@
+import { useEffect, useState } from 'react';
 import { buildMonthGrid, compactMoney } from '../calendar.js';
 import { formatMoney } from '../format.js';
 
 const WEEKDAYS = ['一', '二', '三', '四', '五', '六', '日'];
 
+// 月曆背景圖（個人使用，不在 git 裡，見 .gitignore）。圖不存在時維持原本樣式
+const BACKGROUND_IMAGE = '/images/cinnamoroll.png';
+
+function useImageAvailable(src) {
+  const [available, setAvailable] = useState(false);
+  useEffect(() => {
+    let active = true;
+    const img = new Image();
+    img.onload = () => active && setAvailable(true);
+    img.src = src;
+    return () => {
+      active = false;
+    };
+  }, [src]);
+  return available;
+}
+
 // 7 欄月曆：每格顯示日期、當天支出（綠 −）與收入（紅 +）
 export default function MonthCalendar({ month, days, today, selectedDate, onSelect }) {
   const cells = buildMonthGrid(month);
+  const hasBackground = useImageAvailable(BACKGROUND_IMAGE);
 
   return (
-    <div className="month-calendar">
+    <div className={`month-calendar ${hasBackground ? 'has-bg' : ''}`}>
+      {/* 圖片放在月曆上方的橫幅，不疊在格子後面，格子才清楚 */}
+      {hasBackground && (
+        <div className="calendar-banner" style={{ backgroundImage: `url(${BACKGROUND_IMAGE})` }} aria-hidden="true" />
+      )}
       <div className="calendar-weekdays" aria-hidden="true">
         {WEEKDAYS.map((w) => (
           <span key={w}>{w}</span>

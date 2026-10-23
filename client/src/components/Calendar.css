@@ -152,3 +152,75 @@
     letter-spacing: -0.02em;
   }
 }
+
+/* ---------- 大耳狗主題（只在圖片存在時套用，見 MonthCalendar.jsx） ---------- */
+/* 圖片放在上方橫幅、不疊在格子後面；格子用不透明淺色底＋深色字，深淺色模式都看得清楚 */
+.month-calendar.has-bg {
+  padding: 8px;
+  border-radius: 12px;
+  background: #dceefb;
+}
+
+.calendar-banner {
+  height: 140px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  background-color: #dceefb;
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* 讓大耳狗的臉落在橫幅中間 */
+  background-position: center 48%;
+}
+
+.month-calendar.has-bg .calendar-weekdays span {
+  color: #4a5d7a;
+  font-weight: 600;
+}
+
+.month-calendar.has-bg .calendar-cell {
+  background: #ffffff;
+  border-color: #cfe1f6;
+  color: #1d2a3f;
+}
+
+.month-calendar.has-bg .calendar-cell:hover {
+  border-color: #8fb3e3;
+}
+
+.month-calendar.has-bg .empty-cell {
+  background: transparent;
+  border-color: transparent;
+}
+
+/* 淺色底上用較深的紅綠，維持紅漲綠跌且看得清楚 */
+.month-calendar.has-bg .cell-amount.income {
+  color: #c81e1e;
+}
+
+.month-calendar.has-bg .cell-amount.expense {
+  color: #0f7a35;
+}
+
+.month-calendar.has-bg .calendar-cell.is-today {
+  border-color: #5b8def;
+  border-width: 2px;
+}
+
+.month-calendar.has-bg .calendar-cell.is-selected {
+  background: #5b8def;
+  border-color: #5b8def;
+  color: #fff;
+}
+
+.month-calendar.has-bg .calendar-cell.is-selected .cell-amount {
+  color: #fff;
+}
+
+/* 電腦版月曆很寬，用 cover 會把大耳狗的頭裁掉；改成完整顯示整張圖、置中 */
+@media (min-width: 900px) {
+  .calendar-banner {
+    height: 200px;
+    background-size: contain;
+    background-position: center;
+  }
+}
