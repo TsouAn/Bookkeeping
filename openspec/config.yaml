@@ -1,0 +1,30 @@
+schema: spec-driven
+
+context: |
+  Language: zh-TW
+  All artifacts must be written in zh-TW.
+  Keep OpenSpec structural headings and SHALL/MUST keywords in English.
+
+  ## 專案
+  個人記帳 Web App（單一使用者，自用）。記錄收入與支出，查看本月統計。
+  未來規劃：貼上 LINE Pay 付款通知自動解析、同步財政部電子發票手機條碼載具。
+
+  ## 技術棧
+  - 前端 client/：React 18 + Vite，JavaScript（不用 TypeScript），純 CSS（不用 UI 框架）
+  - 後端 server/：Node.js 24 + Express，資料庫用 Node 內建 node:sqlite（SQLite 檔案）
+  - 開發時 Vite dev server 把 /api 代理到後端 http://localhost:3001
+  - 測試：後端用 node:test + supertest；前端純邏輯用 Vitest
+
+  ## 慣例
+  - 金額一律以「新台幣整數元」儲存（INTEGER），不使用浮點數
+  - 日期以 YYYY-MM-DD 字串儲存；時區以 Asia/Taipei 計算「本月」
+  - API 為 REST + JSON，路徑前綴 /api，錯誤回應格式 { "error": "<訊息>" }
+  - 機密（API 金鑰、載具驗證碼）只能放後端 .env，不可出現在前端或 git
+  - 介面文字使用繁體中文
+
+rules:
+  proposal:
+    - 明確寫出 Non-goals（本次不做的事）
+  tasks:
+    - 每個任務控制在 1 小時內可完成
+    - 後端 API 任務要附帶對應測試任務
