@@ -6,7 +6,7 @@ export default function TransactionList({ transactions, onDelete }) {
   const [confirmingId, setConfirmingId] = useState(null);
 
   return (
-    <section className="card">
+    <div className="ledger-list">
       <h2 className="card-title">明細</h2>
       {transactions.length === 0 ? (
         <p className="empty">這個月還沒有記錄</p>
@@ -54,6 +54,6 @@ export default function TransactionList({ transactions, onDelete }) {
           ))}
         </ul>
       )}
-    </section>
+    </div>
   );
 }

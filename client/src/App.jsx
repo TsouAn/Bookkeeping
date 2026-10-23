@@ -61,7 +61,6 @@ export default function App() {
     <div className="app">
       <header className="app-header">
         <h1>記帳本</h1>
-        {tab === 'ledger' && <MonthPicker month={month} onChange={setMonth} />}
       </header>
 
       <Tabs tabs={TABS} active={tab} onChange={setTab} />
@@ -70,9 +69,14 @@ export default function App() {
         <>
           {loadError && <p className="banner-error">{loadError}</p>}
           <main className="app-main">
-            <MonthlySummary summary={summary} />
-            <TransactionForm onSubmit={handleCreate} />
-            <TransactionList transactions={transactions} onDelete={handleDelete} />
+            <MonthlySummary summary={summary}>
+              <MonthPicker month={month} onChange={setMonth} />
+            </MonthlySummary>
+            {/* 新增表單與明細放在同一張卡片，中間以分隔線區隔 */}
+            <section className="card">
+              <TransactionForm onSubmit={handleCreate} />
+              <TransactionList transactions={transactions} onDelete={handleDelete} />
+            </section>
           </main>
         </>
       ) : tab === 'calendar' ? (

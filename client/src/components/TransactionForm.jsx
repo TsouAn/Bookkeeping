@@ -34,7 +34,7 @@ export default function TransactionForm({ onSubmit }) {
   }
 
   return (
-    <section className="card">
+    <div className="ledger-form">
       {/* noValidate：不用瀏覽器內建提示，統一顯示後端的錯誤訊息 */}
       <form className="transaction-form" onSubmit={handleSubmit} noValidate>
         <div className="type-toggle" role="radiogroup" aria-label="類型">
@@ -105,6 +105,6 @@ export default function TransactionForm({ onSubmit }) {
           {submitting ? '儲存中…' : `新增${type === 'income' ? '收入' : '支出'}`}
         </button>
       </form>
-    </section>
+    </div>
   );
 }

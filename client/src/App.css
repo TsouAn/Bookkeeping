@@ -122,7 +122,15 @@ select {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 16px;
+  /* 三個頁籤的卡片內距一致 */
+  padding: 12px;
+}
+
+/* 卡片最上方置中的控制列（記帳頁的月份選擇），與日曆頁的月份選擇同位置 */
+.card-toolbar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
 }
 
 .card-title {
@@ -175,8 +183,8 @@ select {
 
 .category-bars {
   list-style: none;
-  margin: 16px 0 0;
-  padding: 16px 0 0;
+  margin: 12px 0 0;
+  padding: 12px 0 0;
   border-top: 1px solid var(--border);
   display: grid;
   gap: 8px;
@@ -291,6 +299,13 @@ select {
 }
 
 /* ---------- 明細列表 ---------- */
+/* 與新增表單同一張卡片：上方分隔線 */
+.ledger-list {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
 .empty {
   color: var(--muted);
   text-align: center;

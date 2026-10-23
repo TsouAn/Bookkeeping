@@ -1,13 +1,13 @@
 import { formatMoney } from '../format.js';
 
-export default function MonthlySummary({ summary }) {
-  if (!summary) return null;
-
-  const { income, expense, balance, byCategory } = summary;
+// children：放在卡片最上方的控制項（月份選擇），版面與日曆頁一致
+export default function MonthlySummary({ summary, children }) {
+  const { income = 0, expense = 0, balance = 0, byCategory = [] } = summary ?? {};
   const max = byCategory[0]?.amount ?? 0;
 
   return (
     <section className="card summary" aria-label="本月統計">
+      {children && <div className="card-toolbar">{children}</div>}
       <div className="stats">
         <div className="stat">
           <span className="stat-label">收入</span>
